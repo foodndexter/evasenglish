@@ -21,6 +21,7 @@ button {
   border: none;
   border-radius: 3px;
   cursor: pointer;
+  transition: all 0.2s ease-out;
 }
 
 button:hover {
@@ -29,4 +30,8 @@ button:hover {
 
 button:active {
   opacity: 0.6;
+}
+
+img {
+  width: 100%;
 }

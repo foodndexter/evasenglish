@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { dexyBanner } from "../../constants"
 
-const initialState: Banner[] = []
+const initialState: Banner[] = [...dexyBanner]
 
 const bannerSlice = createSlice({
   name: "banner",

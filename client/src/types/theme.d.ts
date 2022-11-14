@@ -19,7 +19,7 @@ type Setting = {
 type Popup = { state: BooleanLiteral; message?: string; okBtn?: string }
 
 type User = {
-  state: false
+  state: boolean
   email: string
   name: string
   tel: string

@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
-import { bannerReducer, lectureReducer, settingReducer, themeReducer } from "./reducers"
+import { bannerReducer, lectureReducer, settingReducer, themeReducer, userReducer } from "./reducers"
 
 export const store = configureStore({
   reducer: {
@@ -7,6 +7,7 @@ export const store = configureStore({
     banner: bannerReducer,
     lectures: lectureReducer,
     setting: settingReducer,
+    user: userReducer,
   },
 })
 

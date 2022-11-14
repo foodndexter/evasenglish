@@ -1,14 +1,12 @@
 import { styled } from "@stitches/react"
 import { IoMenuSharp, IoCloseSharp } from "react-icons/io5"
+import { getrgba } from "../../api"
 import { menuHandler } from "../../redux/reducers/settingSlice"
 import { AppDispatch } from "../../redux/store"
 
 const Header = (props: { theme: Theme; top: number; width: number; activeMenu: boolean; navi: any; dispatch: AppDispatch }) => {
   const { theme, top, width, activeMenu, dispatch, navi } = props
-  const { title, titleWeight, titleSize, backgroundColor, fontFamily } = theme
-
-  let color = props.theme.color.replace(")", ",.1)")
-  color = color.replace("(", "a(")
+  const { title, titleWeight, titleSize, backgroundColor, fontFamily, color } = theme
 
   const Container = styled("header", {
     position: "fixed",
@@ -16,7 +14,7 @@ const Header = (props: { theme: Theme; top: number; width: number; activeMenu: b
     top: 0,
     left: 0,
     backgroundColor,
-    borderBottom: `1px solid ${color}`,
+    borderBottom: `1px solid ${getrgba(color)}`,
     zIndex: 100,
   })
 

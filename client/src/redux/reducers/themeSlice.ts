@@ -5,7 +5,7 @@ const initialState: Theme = {
   backgroundColor: `rgb(${dexyRGB.white})`,
   color: `rgb(${dexyRGB.black})`,
   fontFamily: `'Noto Sans KR', sans-serif`,
-  fontSize: 16,
+  fontSize: 20,
   fontWeight: 300,
   title: "EVAS",
   titleSize: 25,

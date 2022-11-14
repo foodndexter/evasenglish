@@ -28,7 +28,7 @@ const Layout = (props: { children: ReactNode }) => {
   return (
     <Container id={theme.title}>
       <Header theme={theme} top={top} width={width} activeMenu={activeMenu} dispatch={dispatch} navi={navi} />
-      {activeMenu && <SideBar theme={theme} top={top} width={width} activeMenu={activeMenu} dispatch={dispatch} navi={navi} />}
+      {activeMenu && <SideBar theme={theme} top={top} width={width} activeMenu={activeMenu} dispatch={dispatch} navi={navi} user={user} />}
       {props.children}
     </Container>
   )

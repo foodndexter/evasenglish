@@ -1,1 +1,8 @@
 export { default as Home } from "./Home"
+export { default as Lectures } from "./Lectures"
+export { default as Library } from "./Library"
+export { default as LostFound } from "./LostFound"
+export { default as Signup } from "./Signup"
+export { default as MyLectures } from "./MyLectures"
+export { default as MyCart } from "./MyCart"
+export { default as MyPayments } from "./MyPayments"
