@@ -33,6 +33,9 @@ const SideBar = (props: { theme: Theme; top: number; width: number; activeMenu: 
   })
 
   const closeFn = () => dispatch(menuHandler("off"))
+
+  const [menus, setMenus] = useState([])
+  useEffect(() => {}, [])
   return (
     <Container>
       <Wrap></Wrap>

@@ -7,7 +7,7 @@ import Header from "./Header"
 import SideBar from "./SideBar"
 
 const Layout = (props: { children: ReactNode }) => {
-  const { theme, setting } = useAppSelector((state) => state)
+  const { theme, setting, user } = useAppSelector((state) => state)
   const { activeMenu } = setting
   const { color, backgroundColor, fontSize, fontWeight, fontFamily } = theme
 

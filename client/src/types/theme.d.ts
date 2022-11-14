@@ -18,4 +18,13 @@ type Setting = {
 
 type Popup = { state: BooleanLiteral; message?: string; okBtn?: string }
 
-type User = {}
+type User = {
+  state: false
+  email: string
+  name: string
+  tel: string
+  lectures: Lecture[]
+  payments: Lecture[]
+  cart: Lecture[]
+  basket: Lecture[]
+}
