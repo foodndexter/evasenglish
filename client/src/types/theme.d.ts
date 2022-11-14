@@ -14,9 +14,11 @@ type AppScreen = { width: 0 | number; height: number | 0 }
 type Setting = {
   activeMenu: boolean
   alert: Popup
+  confirm: Popup
+  modal: Popup
 }
 
-type Popup = { state: BooleanLiteral; message?: string; okBtn?: string }
+type Popup = { state: boolean; message?: string; okBtn?: string; data?: any; cancelBtn?: string; title?: string }
 
 type User = {
   state: boolean
