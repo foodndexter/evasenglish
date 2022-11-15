@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState: User = {
-  state: true,
+  state: false,
   name: "",
   tel: "",
   email: "",
@@ -15,8 +15,14 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    userHandler: (state, action) => {
-      return { ...state }
+    userHandler: (state, action: { payload: "off" | { data?: User } }) => {
+      const { payload } = action
+      if (payload === "off") {
+        return { ...initialState, state: false }
+      } else {
+        const { data } = payload
+        return data ? { ...data, state: true } : { ...state }
+      }
     },
   },
 })

@@ -2,12 +2,13 @@ import { styled } from "@stitches/react"
 import React, { ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
 import { DexyBanner, Page } from "../components"
-import { useAppSelector } from "../redux/hooks"
+import { useAppDispatch, useAppSelector } from "../redux/hooks"
 import { RiUser3Line, RiUserAddLine, RiUserShared2Line, RiUserSearchLine } from "react-icons/ri"
 import { useScreen } from "../redux/contex/AppScreenProvider"
 import { AiOutlineFolder } from "react-icons/ai"
 import { BsBasket2 } from "react-icons/bs"
 import { MdOutlinePayments } from "react-icons/md"
+import { confirmHandler, modalHandler } from "../redux/reducers/settingSlice"
 
 const Home = (props: { menus: Router[]; state: boolean }) => {
   const { menus, state } = props
@@ -40,11 +41,6 @@ const Icons = (props: { menus: Router[]; navi: any; state: boolean }) => {
 const AppIcon = (props: { menu: Router; navi: any; size?: number; index: number; state: boolean }) => {
   const { navi, menu, size, index, state } = props
   const { name, img, path } = menu
-  const onClick = () => {
-    if (path) {
-      console.log(`navi to ${path}`)
-    } else console.log(`modal up ${name}`)
-  }
 
   const Button = styled("button", {
     margin: 10,
@@ -99,6 +95,19 @@ const AppIcon = (props: { menu: Router; navi: any; size?: number; index: number;
       { name: "", icon: "" },
       { name: "로그아웃", icon: <RiUserShared2Line size={30} /> },
     ],
+  }
+
+  const dispatch = useAppDispatch()
+  const onClick = () => {
+    if (path) {
+      console.log(`navi to ${path}`)
+    } else {
+      if (name === "로그아웃") {
+        dispatch(confirmHandler({ title: "로그아웃", message: "정말 로그아웃 하시겠습니까?", okBtn: "로그아웃", type: "로그아웃" }))
+      } else if (name === "로그인") {
+        dispatch(modalHandler(name))
+      }
+    }
   }
 
   return (

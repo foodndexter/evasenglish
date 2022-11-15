@@ -35,3 +35,39 @@ button:active {
 img {
   width: 100%;
 }
+
+/* dexyInput */
+.inputWrap {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.inputWrap label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 10px;
+  transition: all 0.2s ease-out;
+}
+
+.inputWrap.focused label {
+  top: 5px;
+  font-size: 12px;
+}
+
+.inputWrap button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.inputWrap > input {
+  height: 50px;
+  padding: 0 10px;
+  border: none;
+}

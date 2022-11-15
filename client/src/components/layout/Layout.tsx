@@ -3,7 +3,7 @@ import React, { ReactNode } from "react"
 import { useNavigate } from "react-router-dom"
 import { useScreen } from "../../redux/contex/AppScreenProvider"
 import { useAppDispatch, useAppSelector } from "../../redux/hooks"
-import { Alert } from "../popup/Popup"
+import { Alert, DexyConfirm, DexyModal } from "../popup/Popup"
 import Header from "./Header"
 import SideBar from "./SideBar"
 
@@ -31,6 +31,8 @@ const Layout = (props: { children: ReactNode }) => {
       <Header theme={theme} top={top} width={width} activeMenu={activeMenu} dispatch={dispatch} navi={navi} />
       {activeMenu && <SideBar theme={theme} top={top} width={width} activeMenu={activeMenu} dispatch={dispatch} navi={navi} user={user} />}
       <Alert dispatch={dispatch} navi={navi} />
+      <DexyConfirm dispatch={dispatch} navi={navi} />
+      <DexyModal dispatch={dispatch} navi={navi} />
       {props.children}
     </Container>
   )

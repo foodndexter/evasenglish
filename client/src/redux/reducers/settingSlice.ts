@@ -6,6 +6,7 @@ const initialState: Setting = {
   confirm: { state: false },
   modal: { state: false },
 }
+type Props = { payload: "off" | { message?: string; type?: string; okBtn?: string; data?: any; cancelBtn?: string; title?: string } }
 
 const settingSlice = createSlice({
   name: "setting",
@@ -22,7 +23,7 @@ const settingSlice = createSlice({
           return { ...state, activeMenu: !state.activeMenu }
       }
     },
-    alertHandler: (state, action: { payload: "off" | { message?: string; type?: string; okBtn?: string; data?: any; title?: string } }) => {
+    alertHandler: (state, action: Props) => {
       const { payload } = action
       if (payload === "off") {
         return { ...state, alert: { state: false } }
@@ -34,10 +35,7 @@ const settingSlice = createSlice({
         }
       }
     },
-    confirmHandler: (
-      state,
-      action: { payload: "off" | { message?: string; type?: string; okBtn?: string; data?: any; cancelBtn?: string; title?: string } }
-    ) => {
+    confirmHandler: (state, action: Props) => {
       const { payload } = action
       if (payload === "off") {
         return { ...state, confirm: { state: false } }
@@ -45,7 +43,7 @@ const settingSlice = createSlice({
         const { message, okBtn, type, data, cancelBtn, title } = payload
         return {
           ...state,
-          alert: {
+          confirm: {
             state: true,
             message: message && message,
             okBtn: okBtn && okBtn,
@@ -57,7 +55,14 @@ const settingSlice = createSlice({
         }
       }
     },
-    modalHandler: (state, action) => {},
+    modalHandler: (state, action: { payload: "off" | "로그인" }) => {
+      switch (action.payload) {
+        case "off":
+          return { ...state, modal: { state: false } }
+        case "로그인":
+          return { ...state, modal: { state: true, type: "로그인" } }
+      }
+    },
   },
 })
 

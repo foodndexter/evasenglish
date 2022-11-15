@@ -18,7 +18,7 @@ type Setting = {
   modal: Popup
 }
 
-type Popup = { state: boolean; message?: string; okBtn?: string; data?: any; cancelBtn?: string; title?: string }
+type Popup = { state: boolean; message?: string; okBtn?: string; data?: any; cancelBtn?: string; title?: string; type?: string }
 
 type User = {
   state: boolean
@@ -30,3 +30,5 @@ type User = {
   cart: Lecture[]
   basket: Lecture[]
 }
+
+type LoginDetail = { email: string; password: string }

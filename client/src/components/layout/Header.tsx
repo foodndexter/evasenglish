@@ -1,7 +1,7 @@
 import { styled } from "@stitches/react"
 import { IoMenuSharp, IoCloseSharp } from "react-icons/io5"
 import { getrgba } from "../../api"
-import { alertHandler, menuHandler } from "../../redux/reducers/settingSlice"
+import { menuHandler } from "../../redux/reducers/settingSlice"
 import { AppDispatch } from "../../redux/store"
 
 const Header = (props: { theme: Theme; top: number; width: number; activeMenu: boolean; navi: any; dispatch: AppDispatch }) => {
@@ -54,7 +54,6 @@ const Header = (props: { theme: Theme; top: number; width: number; activeMenu: b
 
   const onTitle = () => {
     dispatch(menuHandler("off"))
-    dispatch(alertHandler({ message: "hello", okBtn: "확인" }))
     navi("/")
   }
   return (
