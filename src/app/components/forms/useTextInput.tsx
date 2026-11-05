@@ -16,7 +16,7 @@ import { IconType } from "react-icons";
 import { IoCloseCircle } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
 
-type SetFn<T> = Dispatch<SetStateAction<T>>;
+export type SetFn<T> = Dispatch<SetStateAction<T>>;
 export type InputProps = {
   label?: ComponentProps<"label">;
 

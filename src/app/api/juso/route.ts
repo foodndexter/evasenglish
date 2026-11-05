@@ -6,7 +6,6 @@ export async function POST(req: Request) {
     currentPage: number;
     countPerPage: number;
   };
-  console.log(countPerPage, currentPage, keyword);
   const url =
     process.env.JUSO_URL! +
     `&keyword=${keyword}&currentPage=${currentPage ?? 1}&countPerPage=${countPerPage ?? 20}`;

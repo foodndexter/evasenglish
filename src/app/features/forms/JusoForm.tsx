@@ -209,7 +209,7 @@ const Component = ({ Keyword, juso, setJuso, Rest }: Props) => {
             <button
               type="button"
               onClick={Keyword.focus}
-              className="py-10 border justify-center text-zinc-500 text-xs"
+              className="py-10 border border-border rounded justify-center text-zinc-500 text-xs"
             >
               검색어를 입력해주세요.
             </button>

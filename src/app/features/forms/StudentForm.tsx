@@ -6,6 +6,8 @@ import { Student, StudentPayload } from "@/types";
 import { getDateInputValue, lengthValidator } from "@/utils";
 import { useCallback, useState } from "react";
 import useJusoForm from "./JusoForm";
+import SchoolForm from "./SchoolForm";
+import useSchoolForm from "./useSchoolForm";
 
 type Props = {
   payload?: Student;
@@ -28,6 +30,7 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
   });
 
   const Add = useJusoForm();
+  const S = useSchoolForm();
 
   const parents = [];
   const lessons = [];
@@ -48,6 +51,7 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
     if (Add.props.juso.rest.length === 0)
       return a("상세 주소를 입력해주세요.", Add.props.Rest.focus);
   }, [Name, Dob, Mobile, Add]);
+
   return (
     <div className="space-y-2">
       <Form onSubmit={onSubmitBasic} className="border">
@@ -76,6 +80,7 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
         </div>
       </Form>
       <Add.Component {...Add.props} />
+      <S.Component />
     </div>
   );
 };

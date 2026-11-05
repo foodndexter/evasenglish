@@ -2,13 +2,15 @@
 
 import {
   ComponentProps,
+  ReactNode,
+  RefObject,
   useCallback,
   useId,
   useMemo,
   useRef,
   useState,
 } from "react";
-import { InputProps } from "./useTextInput";
+import { InputProps, SetFn, TextInput } from "./useTextInput";
 import { twMerge } from "tailwind-merge";
 import { IoCloseCircle } from "react-icons/io5";
 
@@ -97,7 +99,7 @@ const Component = ({
 export function useSelect(payload?: {
   value?: string;
   validator?: (value: string) => string | null;
-}) {
+}): SelectInput {
   const ref = useRef<HTMLSelectElement | null>(null);
   const focus = useCallback(() => {
     setTimeout(() => {
@@ -147,3 +149,28 @@ export function useSelect(payload?: {
     message,
   };
 }
+
+export type SelectInput = Omit<TextInput, "Component" | "props" | "ref"> & {
+  Component: ({
+    label,
+    containerClassName,
+    resetClassName,
+    messageClassName,
+    setFocused,
+    setValue,
+    message,
+    warpperClassName,
+    messageShown,
+    ...props
+  }: Props) => ReactNode;
+  props: {
+    value: string;
+    message: string | null;
+    id: string;
+    ref: RefObject<HTMLSelectElement | null>;
+    setValue: SetFn<string>;
+    setFocused: SetFn<boolean>;
+  };
+  ref: RefObject<HTMLSelectElement | null>;
+  showPicker: () => void;
+};
