@@ -1,0 +1,12 @@
+@layer base {
+  button,
+  a {
+    @apply flex cursor-pointer hover:opacity-80 active:opacity-50;
+  }
+}
+@layer components {
+  button.install,
+  a.install {
+    /* @apply; */
+  }
+}
