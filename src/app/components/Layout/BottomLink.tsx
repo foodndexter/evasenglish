@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Menu } from "./BottomNav";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
@@ -19,13 +19,21 @@ const BottomLink = ({ FocusedIcon, Icon, href, name }: Menu) => {
     <Link href={href} className="flex flex-col gap-1 items-center ">
       <div
         className={twMerge(
-          "size-10 items-center justify-center flex text-lg rounded-lg bg-zinc-100 text-zinc-500",
-          focused && "bg-primary",
+          "size-10 items-center justify-center flex text-lg rounded-lg bg-zinc-100 text-zinc-500 dark:bg-zinc-800",
+          focused && "bg-primary dark:bg-primary",
         )}
       >
         {focused ? <FocusedIcon className="text-white" /> : <Icon />}
       </div>
-      <p className={twMerge(focused && "text-primary", "text-xs")}>{name}</p>
+      <p
+        className={twMerge(
+          "text-zinc-500",
+          focused && "text-primary font-bold",
+          "text-xs",
+        )}
+      >
+        {name}
+      </p>
     </Link>
   );
 };

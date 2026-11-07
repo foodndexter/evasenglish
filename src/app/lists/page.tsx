@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useLessonStore, useSchoolStore } from "../zustand";
 import { useToggle } from "../components";
 import { LessonForm, SchoolForm } from "../features";
@@ -10,7 +10,6 @@ import {
   IoSquareOutline,
 } from "react-icons/io5";
 import { c } from "@/fn";
-// import Link from "next/link";
 
 type Item = {
   title: string;
@@ -118,13 +117,17 @@ const ListPage = () => {
                       console.log("selecting", lSelection);
                       item.handler(index);
                     }}
-                    // href={`/lists/${isSchool ? "schools/" : "lessons/"}${d.id}`}
                     isSchool={isSchool}
                   />
                 ))}
               </ul>
             ) : (
-              <button onClick={item.onClick}>No item Added</button>
+              <button
+                onClick={item.onClick}
+                className="w-full justify-center py-10 rounded text-zinc-500 bg-zinc-100 dark:bg-zinc-900 mt-2 text-xs"
+              >
+                이곳을 눌러 항목을 추가하세요.
+              </button>
             )}
           </section>
         );

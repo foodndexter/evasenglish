@@ -14,7 +14,7 @@ import BottomLink from "./BottomLink";
 
 const BottomNav = () => {
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 border-t w-full max-w-225 border-border flex p-2 justify-center gap-4 md-mobile:bottom-2 md-mobile:border md-mobile:w-auto md-mobile:rounded-xl  bg-zin-500/50 backdrop-blur-xs">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 border-t w-full max-w-225 border-border flex p-2 justify-center gap-4 md-mobile:bottom-2 md-mobile:border md-mobile:w-auto md-mobile:rounded-xl  bg-zin-500/50 backdrop-blur-xs z-10">
       {menus.map((menu, index) => (
         <BottomLink {...menu} key={index} />
       ))}
