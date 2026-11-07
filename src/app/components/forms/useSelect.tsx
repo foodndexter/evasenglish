@@ -51,13 +51,14 @@ const Component = ({
         <select
           {...props}
           className={twMerge(
-            "border outline-none focus:border-primary rounded h-10 w-full pl-1 pr-7 border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900",
+            "border outline-none focus:border-primary rounded h-10 w-full pl-1 pr-7 border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 appearance-none",
             props?.className,
           )}
           onChange={(e) => {
             setValue(e.target.value);
             if (onSubmitEditing)
               setTimeout(() => onSubmitEditing(e.target.value), 100);
+            if (props?.onChange) props.onChange(e);
           }}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
@@ -111,7 +112,7 @@ export function useSelect(payload?: {
     () =>
       setTimeout(() => {
         if (!ref.current) return;
-        ref.current.focus();
+        ref.current.showPicker();
       }, 100),
     [],
   );

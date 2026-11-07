@@ -62,7 +62,8 @@ export default function useForm() {
         >
           {cancelChildren ?? (
             <>
-              {isPending && <CgSpinner className="animate-spin" />} {"취소"}
+              {isPending && <CgSpinner className="animate-spin" />}{" "}
+              {cancel ?? "취소"}
             </>
           )}
         </button>
@@ -77,7 +78,8 @@ export default function useForm() {
         >
           {submitChildren ?? (
             <>
-              {isPending && <CgSpinner className="animate-spin" />} {"완료"}
+              {isPending && <CgSpinner className="animate-spin" />}{" "}
+              {submit ?? "완료"}
             </>
           )}
         </button>

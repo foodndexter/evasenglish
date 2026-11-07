@@ -1,9 +1,9 @@
 import { DBSchema, IDBPDatabase, openDB } from "idb";
 import { Todo } from "./todo";
-import { Lesson, School, StudentEntity } from "@/types";
+import { Lesson, Parent, School, StudentEntity } from "@/types";
 
 const DB_Name = "yoonbeeseo-db";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 type DB = DBSchema & {
   todos: {
@@ -27,6 +27,15 @@ type DB = DBSchema & {
     indexes: {
       "by-created-at": number;
       "by-updated-at": number;
+    };
+  };
+  parents: {
+    key: string;
+    value: Parent;
+    indexes: {
+      "by-created-at": number;
+      "by-updated-at": number;
+      "by-student-id": string;
     };
   };
   students: {
@@ -76,6 +85,13 @@ export function getDB() {
           store.createIndex("by-mobile", "mobile");
           store.createIndex("by-name", "name");
         }
+        if (!db.objectStoreNames.contains("parents")) {
+          const store = db.createObjectStore("parents", { keyPath: "id" });
+          store.createIndex("by-created-at", "createdAt");
+          store.createIndex("by-updated-at", "updatedAt");
+          store.createIndex("by-student-id", "studentIds");
+        }
+        console.log("db upgraded");
       },
     }).catch((error) => {
       dbPromise = null;

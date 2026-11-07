@@ -8,6 +8,8 @@ import { useCallback, useState } from "react";
 import useJusoForm from "./JusoForm";
 import SchoolForm from "./SchoolForm";
 import useSchoolForm from "./useSchoolForm";
+import useLessonForm from "./useLessonForm";
+import useParentForm from "./useParentForm";
 
 type Props = {
   payload?: Student;
@@ -31,10 +33,8 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
 
   const Add = useJusoForm();
   const S = useSchoolForm();
-
-  const parents = [];
-  const lessons = [];
-  const schools = [];
+  const L = useLessonForm();
+  const P = useParentForm();
 
   const EA = useTextInput(); //! Enrolled At
   const DA = useTextInput(); //! Discharged At
@@ -80,7 +80,10 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
         </div>
       </Form>
       <Add.Component {...Add.props} />
-      <S.Component />
+      <S.Component {...S.props} />
+      <L.Component {...L.props} />
+      <P.Component {...P.props} />
+      <button onClick={() => console.log(L.selectedLessons)}>check</button>
     </div>
   );
 };

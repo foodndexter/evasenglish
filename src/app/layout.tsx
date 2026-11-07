@@ -59,7 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <AppProvider>
-          <main className="p-2">
+          <main className="p-2 pb-20">
             <BottomNav />
             {children}
           </main>
