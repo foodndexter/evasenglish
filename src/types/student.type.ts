@@ -36,6 +36,7 @@ export const studentEntitySchema = z.object({
   isPinned: z.number().nullable(),
   serialNo: z.string(),
   address: jusoSchema.nullable(),
+  paymentDate: z.number().min(1).max(31),
 });
 
 export type StudentEntity = z.infer<typeof studentEntitySchema>;

@@ -32,3 +32,17 @@ export function getDateInputValue(payload?: number) {
 
   return `${y}-${m > 10 ? m : `0${m}`}-${date > 10 ? date : `0${date}`}`;
 }
+
+export function prettifyMobile(mobile: string) {
+  if (mobile.length !== 11) throw new Error("휴대전화번호가 아닙니다.");
+  const ns = [...mobile];
+  const letters = ns.map((m, i) => (i === 2 || i === 6 ? m + "-" : m));
+  return letters.join("");
+}
+
+export function prettifyRegi(regi: string) {
+  if (regi.length !== 10) throw new Error("사업자등록번호가 아닙니다.");
+  const ns = [...regi];
+  const letters = ns.map((m, i) => (i === 2 || i === 4 ? m + "-" : m));
+  return letters.join("");
+}

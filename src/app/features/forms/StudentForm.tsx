@@ -1,12 +1,11 @@
 "use client";
 
-import { useForm, useTextInput } from "@/app/components";
-import { a } from "@/fn";
+import { useForm, useSelect, useTextInput } from "@/app/components";
+import { a, c } from "@/fn";
 import { Student, StudentPayload } from "@/types";
 import { getDateInputValue, lengthValidator } from "@/utils";
 import { useCallback, useState } from "react";
 import useJusoForm from "./JusoForm";
-import SchoolForm from "./SchoolForm";
 import useSchoolForm from "./useSchoolForm";
 import useLessonForm from "./useLessonForm";
 import useParentForm from "./useParentForm";
@@ -36,7 +35,14 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
   const L = useLessonForm();
   const P = useParentForm();
 
-  const EA = useTextInput(); //! Enrolled At
+  const EA = useTextInput({
+    value: getDateInputValue(payload?.enrolledAt ?? new Date().getTime()),
+  }); //! Enrolled At
+  const PD = useSelect({
+    value: payload?.paymentDate
+      ? payload.paymentDate.toString()
+      : new Date().getDate().toString(),
+  });
   const DA = useTextInput(); //! Discharged At
 
   const { Form, SubmitArea, handler, isPending } = useForm();
@@ -79,13 +85,64 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
           />
         </div>
       </Form>
-      <Add.Component {...Add.props} />
-      <S.Component {...S.props} />
-      <L.Component {...L.props} />
-      <P.Component {...P.props} />
-      <button onClick={() => console.log(L.selectedLessons)}>check</button>
+      <div className="flex flex-col gap-2 sm:flex-row max-w-200 mx-auto">
+        <div className="w-full">
+          <Add.Component {...Add.props} />
+        </div>
+        <div className="w-full">
+          <S.Component {...S.props} />
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row max-w-200 mx-auto">
+        <div className="w-full">
+          <L.Component {...L.props} />
+        </div>
+        <div className="w-full">
+          <P.Component {...P.props} />
+        </div>
+      </div>
+      <Form className="sm:flex-row">
+        <div className="gap-2 sm:flex-1 flex">
+          <EA.Component
+            {...EA.props}
+            messageShown={false}
+            containerClassName="flex-1"
+            label={{ children: "원생등록일" }}
+            type="date"
+            onChange={(e) => {
+              const date = parseInt(e.target.value.split("-")[2]);
+              c(
+                `결제일도 동일한 ${date}일로 하시겠습니까?`,
+                () => PD.setValue(date.toString()),
+                PD.showPicker,
+              );
+            }}
+          />
+          <PD.Component
+            {...PD.props}
+            label={{ children: "결제일" }}
+            containerClassName="flex-1"
+            data={Array.from({
+              length: new Date(
+                new Date().getFullYear(),
+                new Date().getMonth() + 1,
+                0,
+              ).getDate(),
+            }).map((_, i) => ({
+              value: String(i + 1),
+              title: i + 1 + "일",
+            }))}
+          />
+        </div>
+      </Form>
+      <button onClick={() => console.log(P.selectedParents)}>check</button>
     </div>
   );
 };
 
 export default StudentForm;
+
+console.log(new Date().getMonth());
+console.log(
+  new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDay(),
+);

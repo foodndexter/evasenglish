@@ -9,6 +9,7 @@ import {
 import { useParentStore } from "@/app/zustand/useParentStore";
 import { a, c } from "@/fn";
 import { Parent, ParentPayload, parentRelationships } from "@/types";
+import { prettifyMobile } from "@/utils";
 import React, { useCallback, useMemo, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
 
@@ -50,6 +51,13 @@ const Component = ({
         relationship: R.value,
         studentIds: [],
       };
+      const foundMobile = parents.some((p) => p.mobile === payload.mobile);
+      if (foundMobile) {
+        const foundName = parents.some((p) => p.name === payload.name);
+        if (foundName)
+          return a("동일한 이름, 동일한 연락처의 보호자가 존재합니다.");
+        return a("동일한 연락처의 보호자가 존재합니다.");
+      }
       handler(async () => {
         try {
           const parent = await create(payload);
@@ -82,13 +90,24 @@ const Component = ({
                 title:
                   parent.id === "신규"
                     ? parent.name
-                    : `[${parent.relationship}] ${parent.name} ${parent.mobile}`,
+                    : `[${parent.relationship}] ${parent.name} ${prettifyMobile(parent.mobile)}`,
               }),
             )}
             onChange={(e) => {
               const id = e.target.value;
-              if (id === "신규") return a(id);
+              S.setValue("");
+              if (id === "신규") {
+                setIsNew(true);
+                R.showPicker();
+              }
               const parent = parents.find((p) => p.id === id);
+              if (!parent) return;
+              setSelectedParents((prev) => {
+                const found = prev.some((p) => p.id === parent.id);
+                return found
+                  ? prev.filter((p) => p.id !== parent.id)
+                  : [parent, ...prev];
+              });
               //   setSelectedParents(prev => )
               //   setSelectedParents((prev) =>
               //     !parent ? [parent, ...prev] : prev.filter((i) => i.id !== id),
@@ -103,17 +122,16 @@ const Component = ({
                     type="button"
                     className="w-full text-sm hover:text-red-500 p-1 hover:bg-zinc-50 rounded dark:hover:bg-zinc-900 items-center"
                     onClick={() => {
-                      //   setSelectedLessons((prev) =>
-                      //     prev.filter((i) => i.id !== lesson.id),
-                      //   );
-                      //   L.setValue("");
-                      //   L.showPicker();
+                      setSelectedParents((prev) =>
+                        prev.filter((p) => p.id !== parent.id),
+                      );
+                      // S.showPicker();
                     }}
                   >
                     <p className="flex-1 text-left">
                       {parent.id === "신규"
                         ? parent.name
-                        : `[${parent.relationship}] ${parent.name} ${parent.mobile}`}
+                        : `[${parent.relationship}] ${parent.name} ${prettifyMobile(parent.mobile)}`}
                     </p>
                     <IoTrashOutline />
                   </button>
@@ -149,7 +167,14 @@ const Component = ({
               messageShown={false}
             />
           </div>
-          <SubmitArea submit="추가" isPending={isPending} />
+          <SubmitArea
+            submit="추가"
+            isPending={isPending}
+            onCancel={() => {
+              setIsNew(false);
+              S.showPicker();
+            }}
+          />
         </>
       )}
     </Form>
