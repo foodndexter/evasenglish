@@ -19,7 +19,7 @@ const BottomLink = ({ FocusedIcon, Icon, href, name }: Menu) => {
     <Link href={href} className="flex flex-col gap-1 items-center ">
       <div
         className={twMerge(
-          "size-10 items-center justify-center flex text-lg rounded-lg bg-zinc-100 text-zinc-500 dark:bg-zinc-800",
+          "size-10 items-center justify-center flex text-lg rounded-lg bg-zinc-100 dark:text-zinc-500 dark:bg-zinc-800",
           focused && "bg-primary dark:bg-primary",
         )}
       >
@@ -27,7 +27,7 @@ const BottomLink = ({ FocusedIcon, Icon, href, name }: Menu) => {
       </div>
       <p
         className={twMerge(
-          "text-zinc-500",
+          "dark:text-zinc-500",
           focused && "text-primary font-bold",
           "text-xs",
         )}

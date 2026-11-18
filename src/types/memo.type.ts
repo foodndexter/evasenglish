@@ -7,6 +7,7 @@ export const memoSchema = z.object({
   updatedAt: z.number(),
   isImportant: z.number().nullable(),
   id: z.string(),
+  studentId: z.string(),
 });
 
 export type Memo = z.infer<typeof memoSchema>;

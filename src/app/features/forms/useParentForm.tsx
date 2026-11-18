@@ -10,7 +10,7 @@ import { useParentStore } from "@/app/zustand/useParentStore";
 import { a, c } from "@/fn";
 import { Parent, ParentPayload, parentRelationships } from "@/types";
 import { prettifyMobile } from "@/utils";
-import React, { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
 
 type Props = {
@@ -23,6 +23,7 @@ type Props = {
   setIsNew: SetFn<boolean>;
   selectedParents: Parent[];
   setSelectedParents: SetFn<Parent[]>;
+  name?: string;
 };
 
 const Component = ({
@@ -35,6 +36,7 @@ const Component = ({
   RI,
   selectedParents,
   setSelectedParents,
+  name,
 }: Props) => {
   const { Form, SubmitArea, handler, isPending } = useForm();
   const { parents, create } = useParentStore();
@@ -113,6 +115,9 @@ const Component = ({
               //     !parent ? [parent, ...prev] : prev.filter((i) => i.id !== id),
               //   );
             }}
+            label={{
+              children: "보호자",
+            }}
           />
           {selectedParents.length > 0 && (
             <ul>
@@ -152,7 +157,19 @@ const Component = ({
                 }))}
                 label={{ children: "관계" }}
                 containerClassName="w-25 text-sm"
-                onSubmitEditing={N.focus}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (name && name.length > 0) {
+                    c(
+                      `보호자의 성함을 [둔산 에바즈 ${name} ${value}]로 입력하시겠습니까?`,
+                      () => {
+                        N.setValue(`둔산 에바즈 ${name} ${value}`);
+                        M.focus();
+                      },
+                      N.focus,
+                    );
+                  }
+                }}
               />
               <N.Component
                 {...N.props}
@@ -180,7 +197,7 @@ const Component = ({
     </Form>
   );
 };
-const useParentForm = (p?: { payload?: Parent[] }) => {
+const useParentForm = (p?: { payload?: Parent[]; name?: string }) => {
   const N = useTextInput();
   const RI = useTextInput();
   const M = useTextInput();
@@ -199,13 +216,15 @@ const useParentForm = (p?: { payload?: Parent[] }) => {
       selectedParents,
       setSelectedParents,
       setIsNew,
+      name: p?.name,
     }),
-    [N, RI, M, S, R, isNew, selectedParents],
+    [N, RI, M, S, R, isNew, selectedParents, p],
   );
   return {
     Component,
     props,
     selectedParents,
+    setSelectedParents,
   };
 };
 

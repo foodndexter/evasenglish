@@ -46,3 +46,12 @@ export function prettifyRegi(regi: string) {
   const letters = ns.map((m, i) => (i === 2 || i === 4 ? m + "-" : m));
   return letters.join("");
 }
+
+export function getSerial(serial: number) {
+  const item = String(serial);
+  const l = item.length;
+  const length = 8 - l;
+  const items = Array.from({ length }, () => 0);
+
+  return items.join("") + item;
+}

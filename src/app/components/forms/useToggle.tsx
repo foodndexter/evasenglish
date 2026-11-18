@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useId, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
 
@@ -14,7 +14,7 @@ export default function useToggle() {
           <div
             {...props}
             className={twMerge(
-              "transition-all relative border border-zinc-200 dark:border-zinc-700 rounded bg-white dark:bg-black max-h-[calc(100vh-40px)] overflow-y-auto",
+              "transition-all relative border border-zinc-200 dark:border-zinc-700 rounded bg-white dark:bg-black max-h-[calc(100vh-110px)] overflow-y-auto w-[calc(100vw-60px)]",
 
               props?.className,
             )}
@@ -51,5 +51,45 @@ export default function useToggle() {
     ),
     [toggled],
   );
-  return { toggled, setToggled, handler, Modal, ModalBase };
+  const id = useId();
+  const Switch = useCallback(
+    ({ label, text, handler, state }: SwitchProps) => {
+      return (
+        <div className="flex flex-col gap-1">
+          {label && (
+            <label className="text-xs text-gray-500" htmlFor={id}>
+              {label}
+            </label>
+          )}
+          <div className="flex">
+            {text && (
+              <label htmlFor={id} className="flex-1">
+                {text}
+              </label>
+            )}
+            <button
+              type="button"
+              onClick={handler}
+              className={twMerge(
+                "border rounded-full h-5 w-9 bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-700 items-center pl-0.5 transition-all",
+                state && "pl-4.5 bg-primary dark:bg-primary",
+              )}
+              id={id}
+            >
+              <span className="size-3.5 rounded-full bg-white dark:bg-zinc-200" />
+            </button>
+          </div>
+        </div>
+      );
+    },
+    [id],
+  );
+  return { toggled, setToggled, handler, Modal, ModalBase, Switch };
 }
+
+export type SwitchProps = {
+  label?: string;
+  text?: string;
+  state: boolean;
+  handler: () => void;
+};

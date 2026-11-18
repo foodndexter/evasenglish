@@ -1,9 +1,9 @@
 import { DBSchema, IDBPDatabase, openDB } from "idb";
 import { Todo } from "./todo";
-import { Lesson, Parent, School, StudentEntity } from "@/types";
+import { Lesson, Memo, Parent, School, StudentEntity } from "@/types";
 
 const DB_Name = "yoonbeeseo-db";
-const DB_VERSION = 2;
+const DB_VERSION = 5;
 
 type DB = DBSchema & {
   todos: {
@@ -46,8 +46,21 @@ type DB = DBSchema & {
       "by-updated-at": number;
       "by-school": string;
       "by-lesson": string;
-      "by-mobile": string;
-      "by-name": string;
+      "by-parent": string;
+      "by-payment-date": number;
+    };
+  };
+  count: {
+    key: number;
+    value: number;
+  };
+  memos: {
+    key: string;
+    value: Memo;
+    indexes: {
+      "by-created-at": number;
+      "by-updated-at": number;
+      "by-student-id": string;
     };
   };
   //! add stores
@@ -82,14 +95,26 @@ export function getDB() {
           store.createIndex("by-updated-at", "updatedAt");
           store.createIndex("by-lesson", "lessons");
           store.createIndex("by-school", "schools");
-          store.createIndex("by-mobile", "mobile");
-          store.createIndex("by-name", "name");
+          store.createIndex("by-parent", "parents");
+          store.createIndex("by-payment-date", "paymentDate");
         }
         if (!db.objectStoreNames.contains("parents")) {
           const store = db.createObjectStore("parents", { keyPath: "id" });
           store.createIndex("by-created-at", "createdAt");
           store.createIndex("by-updated-at", "updatedAt");
           store.createIndex("by-student-id", "studentIds");
+        }
+        if (!db.objectStoreNames.contains("count")) {
+          db.createObjectStore("count");
+        }
+        if (!db.objectStoreNames.contains("memos")) {
+          const store = db.createObjectStore("memos", {
+            keyPath: "id",
+            autoIncrement: true,
+          });
+          store.createIndex("by-created-at", "createdAt");
+          store.createIndex("by-updated-at", "updatedAt");
+          store.createIndex("by-student-id", "stduentId");
         }
         console.log("db upgraded");
       },

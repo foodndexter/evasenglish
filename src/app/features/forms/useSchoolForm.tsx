@@ -6,32 +6,49 @@ import {
   useTextInput,
 } from "@/app/components";
 import { useSchoolStore } from "@/app/zustand";
+import { a, c } from "@/fn";
 import { School } from "@/types";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { IoTrashOutline } from "react-icons/io5";
 
 const useSchoolForm = () => {
   const schools = useSchoolStore((s) => s.schools);
   const S = useSelect({});
   const SL = useSelect({});
   const L = useTextInput({});
-  const { Form } = useForm();
+  const { Form, SubmitArea } = useForm();
   type Props = { S: SelectInput; L: TextInput; SL: SelectInput };
   const props = useMemo<Props>(() => ({ S, L, SL }), [S, L, SL]);
 
-  const value = useMemo<School | null>(() => {
-    const school = schools.find((item) => item.id === S.value);
-    if (!school) return null;
-    return {
-      ...school,
-      description: SL.value === "직접입력" ? L.value : SL.value,
-    };
-  }, [S, L, schools, SL]);
+  // const value = useMemo<School | null>(() => {
+  //   const school = schools.find((item) => item.id === S.value);
+  //   if (!school) return null;
+  //   return {
+  //     ...school,
+  //     description: SL.value === "직접입력" ? L.value : SL.value,
+  //   };
+  // }, [S, L, schools, SL]);
+
+  const [selectedSchools, setSelectedSchools] = useState<School[]>([]);
 
   const Component = useCallback(
     ({ S, L, SL }: Props) => {
+      const onSubmit = () => {
+        const school = schools.find((s) => s.id === S.value);
+        if (!school) return a("No such school!");
+        setSelectedSchools((prev) => {
+          const some = prev.some((s) => s.id === school.id);
+          return some
+            ? prev.filter((s) => s.id !== school.id)
+            : [{ ...school, description: SL.value }, ...prev];
+        });
+        S.setValue("");
+        SL.setValue("");
+        c("계속 추가하시겠습니까?", S.showPicker);
+      };
       return (
-        <Form>
-          <div className="flex gap-2">
+        <Form onSubmit={onSubmit}>
+          <div className="flex gap-2 items-end">
             <S.Component
               label={{ children: "학교/직장 선택" }}
               {...S.props}
@@ -73,13 +90,38 @@ const useSchoolForm = () => {
                 }}
               />
             )}
+            <button className="bg-primary text-white h-10 rounded items-center px-4">
+              추가
+            </button>
           </div>
+          {selectedSchools.length > 0 && (
+            <ul>
+              {selectedSchools.map((school) => (
+                <li key={school.id}>
+                  <button
+                    type="button"
+                    className="p-1 text-sm w-full items-center dark:bg-zinc-900 rounded hover:bg-zinc-50 dark:hover:bg-zinc-900 hover:text-red-500"
+                    onClick={() =>
+                      setSelectedSchools((prev) =>
+                        prev.filter((s) => s.id !== school.id),
+                      )
+                    }
+                  >
+                    <p className="flex-1 text-left">
+                      {school.name} {school.description}
+                    </p>
+                    <IoTrashOutline />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </Form>
       );
     },
-    [schools, Form],
+    [schools, Form, selectedSchools],
   );
-  return { Component, props, value };
+  return { Component, props, selectedSchools, setSelectedSchools };
 };
 
 export default useSchoolForm;

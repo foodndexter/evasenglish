@@ -40,22 +40,26 @@ export default function useForm() {
       cancelChildren,
       submitChildren,
       isPending,
+      cancelClassName,
+      submitClassName,
     }: {
+      submit?: string;
+      cancel?: string;
       container?: ComponentProps<"div">["className"];
-      cancel?: ComponentProps<"button">["className"];
-      submit?: ComponentProps<"button">["className"];
+      cancelClassName?: ComponentProps<"button">["className"];
+      submitClassName?: ComponentProps<"button">["className"];
       onCancel?: () => void;
       onSubmit?: () => void;
       cancelChildren?: ReactNode;
       submitChildren?: ReactNode;
       isPending?: boolean;
     }) => (
-      <div className={twMerge("flex gap-2", container)}>
+      <div className={twMerge("flex gap-2 w-full max-w-200", container)}>
         <button
           type={onCancel ? "button" : "reset"}
           className={twMerge(
             "border rounded h-10 items-center px-2 border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:hover:text-300 dark:hover:bg-zinc-800 gap-2 disabled:opacity-50 min-w-20 justify-center",
-            cancel,
+            cancelClassName,
           )}
           onClick={onCancel}
           disabled={isPending}
@@ -72,7 +76,7 @@ export default function useForm() {
           type="submit"
           className={twMerge(
             "flex-1 rounded bg-primary text-white items-center justify-center gap-2 disabled:bg-primary/80",
-            submit,
+            submitClassName,
           )}
           onClick={onSubmit}
         >

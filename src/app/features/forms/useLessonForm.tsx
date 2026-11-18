@@ -76,5 +76,5 @@ export default function useLessonForm(p?: { payload?: Lesson[] }) {
     [L, selectedLessons],
   );
 
-  return { Component, selectedLessons, props };
+  return { Component, selectedLessons, props, setSelectedLessons };
 }

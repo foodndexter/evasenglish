@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren, Suspense, useEffect, useState } from "react";
 import { useLessonStore } from "../zustand/useLessonStore";
 import { useSchoolStore } from "../zustand/useSchoolStore";
-import { useParentStore } from "../zustand";
+import { useMemoStore, useParentStore, useStudentStore } from "../zustand";
 
 const AppProvider = ({ children }: PropsWithChildren) => {
   const [initialized, setInitialized] = useState(false);
@@ -16,6 +16,8 @@ const AppProvider = ({ children }: PropsWithChildren) => {
         await useLessonStore.getState().init();
         await useSchoolStore.getState().init();
         await useParentStore.getState().init();
+        await useMemoStore.getState().init();
+        await useStudentStore.getState().init();
       } finally {
         setInitialized(true);
         console.log("initialized!");

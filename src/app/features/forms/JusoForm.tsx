@@ -10,7 +10,7 @@ import {
   JusoResultProps,
 } from "@/types";
 import { lengthValidator } from "@/utils";
-import React, {
+import {
   Dispatch,
   Fragment,
   SetStateAction,
@@ -47,7 +47,8 @@ const Component = ({ Keyword, juso, setJuso, Rest }: Props) => {
         currentPage: Keyword.value !== savedKeyword ? 1 : currentPage,
       }),
       method: "POST",
-    }).then((res) =>
+    }).then((res) => {
+      // console.log(res);
       res
         .json()
         .then(
@@ -72,8 +73,8 @@ const Component = ({ Keyword, juso, setJuso, Rest }: Props) => {
             setHasSearched(true);
             setSavedKeyword(Keyword.value);
           },
-        ),
-    );
+        );
+    });
   }, [savedKeyword, Keyword.value, currentPage, setJuso]);
 
   const onFetchMore = useCallback(() => {

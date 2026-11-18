@@ -24,9 +24,7 @@ export const studentEntitySchema = z.object({
   mobile: z.string().length(11),
   lessons: z.array(z.string()),
   schools: z.array(
-    z.object(
-      schoolSchema.pick({ description: true }).extend({ id: z.string() }),
-    ),
+    schoolSchema.pick({ description: true }).extend({ id: z.string() }),
   ),
   parents: z.array(z.string()),
   enrolledAt: z.number(),
@@ -66,11 +64,15 @@ export const studentPayloadSchema = studentEntitySchema
     parents: true,
     payments: true,
     memos: true,
+    createdAt: true,
+    updatedAt: true,
+    id: true,
+    serialNo: true,
   })
   .extend({
     lessons: z.array(lessonSchema),
     schools: z.array(schoolSchema),
-    parents: z.array(parentSchema.or(parentPayloadSchema)),
+    parents: z.array(parentSchema),
     memos: z.array(memoPayloadSchema),
   });
 

@@ -3,12 +3,14 @@
 import { useForm, useSelect, useTextInput } from "@/app/components";
 import { a, c } from "@/fn";
 import { Student, StudentPayload } from "@/types";
-import { getDateInputValue, lengthValidator } from "@/utils";
+import { getDateInputValue, getSerial, lengthValidator } from "@/utils";
 import { useCallback, useState } from "react";
 import useJusoForm from "./JusoForm";
 import useSchoolForm from "./useSchoolForm";
 import useLessonForm from "./useLessonForm";
 import useParentForm from "./useParentForm";
+import useMemoForm from "./MemoForm";
+import { useStudentStore } from "@/app/zustand";
 
 type Props = {
   payload?: Student;
@@ -31,9 +33,10 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
   });
 
   const Add = useJusoForm();
+  const [addSkipped, setAddSkipped] = useState(false);
   const S = useSchoolForm();
   const L = useLessonForm();
-  const P = useParentForm();
+  const P = useParentForm({ name: Name.value });
 
   const EA = useTextInput({
     value: getDateInputValue(payload?.enrolledAt ?? new Date().getTime()),
@@ -44,6 +47,7 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
       : new Date().getDate().toString(),
   });
   const DA = useTextInput(); //! Discharged At
+  const M = useMemoForm();
 
   const { Form, SubmitArea, handler, isPending } = useForm();
 
@@ -58,6 +62,82 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
       return a("상세 주소를 입력해주세요.", Add.props.Rest.focus);
   }, [Name, Dob, Mobile, Add]);
 
+  const onSubmit = useCallback(() => {
+    const payload: StudentPayload = {
+      address: Add.props.juso,
+      dischargedAt: null,
+      dob: new Date(Dob.value).getTime(),
+      enrolledAt: new Date(EA.value).getTime(),
+      isPinned: null,
+      lessons: L.selectedLessons,
+      memos: M.memos,
+      mobile: Mobile.value,
+      name: Name.value,
+      parents: P.selectedParents,
+      paymentDate: parseInt(PD.value),
+      schools: S.selectedSchools,
+    };
+
+    if (Name.message) return a(Name.message, Name.focus);
+    if (Dob.message) return a(Dob.message, Dob.focus);
+    if (Mobile.message) return a(Mobile.message, Mobile.focus);
+
+    const fn = () => {
+      if (lengthValidator(P.selectedParents))
+        return a("보호자를 선택해주세요.", P.props.S.showPicker);
+      if (lengthValidator(S.selectedSchools))
+        return a("학교/직장을 입력해주세요.", S.props.S.showPicker);
+      if (lengthValidator(L.selectedLessons))
+        return a("수강 클래스를 선택해주세요.", L.props.L.showPicker);
+
+      const newDate = parseInt(EA.value.split("-")[2]).toString();
+      if (PD.value !== newDate) {
+        if (
+          confirm(
+            `등록일과 결제일이 다릅니다. 같은 날 [${newDate}일]로 하시겠습니까?`,
+          )
+        ) {
+          PD.setValue(newDate);
+        }
+      }
+      const l: StudentPayload = { ...payload, paymentDate: parseInt(PD.value) };
+
+      if (lengthValidator(payload.memos)) {
+        if (confirm("메모를 작성하시겠습니까?")) {
+          M.props.setIsAdding(true);
+          return M.props.T.focus();
+        }
+      }
+
+      handler(async () => {
+        if (payload) {
+          console.log("edit function");
+        } else {
+          await useStudentStore.getState().createStudent([l]);
+          if (confirm("계속해서 추가하시겠습니까?")) {
+            Name.setValue("");
+            Mobile.setValue("");
+            Dob.setValue(getDateInputValue(new Date().getTime()));
+            S.setSelectedSchools([]);
+            L.setSelectedLessons([]);
+            P.setSelectedParents([]);
+            M.setMemos([]);
+            Name.focus();
+            return;
+          }
+        }
+        cancelHandler();
+        console.log("DONE!");
+      });
+    };
+
+    if ((!Add.props.juso || Add.props.juso.rest.length === 0) && !addSkipped)
+      return c("주소를 입력하시겠습니까?", Add.props.Keyword.focus, () => {
+        setAddSkipped(true);
+        fn();
+      });
+    fn();
+  }, [Name, Mobile, Dob, Add, S, L, P, PD, EA, addSkipped]);
   return (
     <div className="space-y-2">
       <Form onSubmit={onSubmitBasic} className="border">
@@ -109,14 +189,18 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
             containerClassName="flex-1"
             label={{ children: "원생등록일" }}
             type="date"
-            onChange={(e) => {
-              const date = parseInt(e.target.value.split("-")[2]);
-              c(
-                `결제일도 동일한 ${date}일로 하시겠습니까?`,
-                () => PD.setValue(date.toString()),
-                PD.showPicker,
-              );
-            }}
+            // onChange={(e) => {
+            //   const date = parseInt(e.target.value.split("-")[2]);
+            //   // setTimeout(
+            //   //   () =>
+            //   //     c(
+            //   //       `결제일도 동일한 ${date}일로 하시겠습니까?`,
+            //   //       () => PD.setValue(date.toString()),
+            //   //       PD.showPicker,
+            //   //     ),
+            //   //   300,
+            //   // );
+            // }}
           />
           <PD.Component
             {...PD.props}
@@ -135,14 +219,19 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
           />
         </div>
       </Form>
-      <button onClick={() => console.log(P.selectedParents)}>check</button>
+      <M.Component {...M.props} />
+      <SubmitArea
+        onCancel={() =>
+          c(
+            "취소하시면 작성한 내용이 모두 사라집니다. 그래도 취소하시겠습니까?",
+            () => cancelHandler && cancelHandler(),
+          )
+        }
+        onSubmit={onSubmit}
+        isPending={isPending}
+      />
     </div>
   );
 };
 
 export default StudentForm;
-
-console.log(new Date().getMonth());
-console.log(
-  new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDay(),
-);
