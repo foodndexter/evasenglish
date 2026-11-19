@@ -74,38 +74,50 @@ const HomePage = () => {
           payments: pms,
         });
       });
-
-      if (filter.target === "클래스") {
-        array.map((student, index) => {
+      let copy = [...array];
+      array.map((student) => {
+        const remove = () => {
+          return (copy = copy.filter(({ id }) => student.id !== id));
+        };
+        if (filter.target === "클래스") {
           if (!student.lessons.some((lesson) => lesson.id === filter.value))
-            return array.splice(index, 1);
-        });
-      } else if (filter.target === "학교") {
-        array.map((student, index) => {
+            remove();
+        } else if (filter.target === "학교") {
           if (!student.schools.some((school) => school.id === filter.value))
-            return array.splice(index, 1);
-        });
-      }
-      console.log(
-        array.sort((a, b) => {
-          switch (filter.target) {
-            case "결제일":
-              const isAsec =
-                typeof filter.value === "string" && filter.value === "asec";
+            remove();
+        } else if (filter.target === "부서") {
+          const found = student.lessons.find(
+            (lesson) => lesson.sort === filter.value,
+          );
 
-              if (a.paymentDate > b.paymentDate) return isAsec ? -1 : 1;
-
-              if (a.paymentDate === b.paymentDate) return 0;
-
-              if (a.paymentDate < b.paymentDate) return isAsec ? 1 : -1;
-
-            default:
-              return 0;
+          if (!found) {
+            console.log("remove", student.name);
+            remove();
           }
-        }),
-      );
+        }
+      });
+      console.log(copy);
 
-      setData(array);
+      // console.log(
+      //   array.sort((a, b) => {
+      //     switch (filter.target) {
+      //       case "결제일":
+      //         const isAsec =
+      //           typeof filter.value === "string" && filter.value === "asec";
+
+      //         if (a.paymentDate > b.paymentDate) return isAsec ? -1 : 1;
+
+      //         if (a.paymentDate === b.paymentDate) return 0;
+
+      //         if (a.paymentDate < b.paymentDate) return isAsec ? 1 : -1;
+
+      //       default:
+      //         return 0;
+      //     }
+      //   }),
+      // );
+
+      setData(copy);
     };
 
     fn();
@@ -126,6 +138,11 @@ const HomePage = () => {
     },
     [filterHandler, F, filter],
   );
+
+  const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
+  const onDeleteSelected = useCallback(() => {
+    console.log("delete", selectedStudents.join(", "));
+  }, [selectedStudents]);
 
   return (
     <main>
@@ -184,6 +201,23 @@ const HomePage = () => {
       <div className="flex items-center  border-b pb-2">
         <p className="flex-1">학생관리: {data.length}명</p>
         <div className="flex gap-2">
+          {selectedStudents.length > 0 && (
+            <ul className="flex gap-1 text-xs items-center border">
+              <li>
+                <button
+                  className="p-1 hover:text-red-500"
+                  onClick={onDeleteSelected}
+                >
+                  선택 삭제
+                </button>
+              </li>
+              <li>
+                <button className="p-1" onClick={() => setSelectedStudents([])}>
+                  선택 취소
+                </button>
+              </li>
+            </ul>
+          )}
           <button
             className={twMerge(base, filter.value && "w-auto gap-2 px-2")}
             onClick={F.handler}
@@ -229,15 +263,26 @@ const HomePage = () => {
         </div>
       </div>
       <ul>
-        {data.map((student, index) => (
-          <StudentLi
-            key={student.id}
-            {...student}
-            index={index}
-            isIcon={isIcon}
-            numOfRow={numOfRow}
-          />
-        ))}
+        {data.map((student, index) => {
+          const selected = selectedStudents.some((id) => id === student.id);
+          return (
+            <StudentLi
+              key={student.id}
+              {...student}
+              index={index}
+              isIcon={isIcon}
+              numOfRow={numOfRow}
+              selected={selected}
+              onSelect={() =>
+                setSelectedStudents((prev) =>
+                  selected
+                    ? prev.filter((id) => student.id !== id)
+                    : [...prev, student.id],
+                )
+              }
+            />
+          );
+        })}
       </ul>
       <button onClick={M.handler}>open modal</button>
       {M.toggled && (

@@ -11,7 +11,7 @@ import { School } from "@/types";
 import { useCallback, useMemo, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
 
-const useSchoolForm = () => {
+const useSchoolForm = (payload?: School[]) => {
   const schools = useSchoolStore((s) => s.schools);
   const S = useSelect({});
   const SL = useSelect({});
@@ -20,16 +20,9 @@ const useSchoolForm = () => {
   type Props = { S: SelectInput; L: TextInput; SL: SelectInput };
   const props = useMemo<Props>(() => ({ S, L, SL }), [S, L, SL]);
 
-  // const value = useMemo<School | null>(() => {
-  //   const school = schools.find((item) => item.id === S.value);
-  //   if (!school) return null;
-  //   return {
-  //     ...school,
-  //     description: SL.value === "직접입력" ? L.value : SL.value,
-  //   };
-  // }, [S, L, schools, SL]);
-
-  const [selectedSchools, setSelectedSchools] = useState<School[]>([]);
+  const [selectedSchools, setSelectedSchools] = useState<School[]>(
+    payload ?? [],
+  );
 
   const Component = useCallback(
     ({ S, L, SL }: Props) => {

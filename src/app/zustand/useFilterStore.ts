@@ -1,4 +1,4 @@
-import { Juso } from "@/types";
+import { Juso, lessonSorts } from "@/types";
 import { create } from "zustand";
 
 type Props = {
@@ -15,6 +15,7 @@ export type Filter = {
     | "연락처"
     | "주소"
     | "퇴원일"
+    | "부서"
     | null;
   value: number | string | null;
 };
@@ -34,6 +35,10 @@ export const filters: {
       { name: "오름차순", value: "ascd" },
       { name: "내림차순", value: "dscd" },
     ],
+  },
+  {
+    target: "부서",
+    items: lessonSorts.map((sort) => ({ name: sort, value: sort })),
   },
   { target: "클래스", items: [] },
   { target: "학교", items: [] },

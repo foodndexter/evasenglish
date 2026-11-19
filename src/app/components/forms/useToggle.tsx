@@ -1,12 +1,28 @@
 "use client";
 
-import { useCallback, useId, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
 
 export default function useToggle() {
   const [toggled, setToggled] = useState(false);
   const handler = useCallback(() => setToggled((prev) => !prev), []);
+
+  useEffect(() => {
+    if (toggled) {
+      const fn = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setToggled(false);
+        }
+      };
+
+      window.addEventListener("keydown", fn);
+      return () => {
+        window.removeEventListener("keydown", fn);
+      };
+    }
+  }, [toggled]);
+
   const ModalBase = useCallback(
     (props: React.ComponentProps<"div">) => (
       <>
