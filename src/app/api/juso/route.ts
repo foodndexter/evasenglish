@@ -1,4 +1,5 @@
 import { JusoResult } from "@/types/juso.types";
+import { supabase } from "@/utils/supabase";
 
 export async function POST(req: Request) {
   const { countPerPage, currentPage, keyword } = (await req.json()) as {
@@ -22,4 +23,11 @@ export async function POST(req: Request) {
     });
 
   return Response.json(results);
+}
+
+export async function PATCH(req: Request) {
+  const { data, error } = await supabase.from("users").select("*");
+
+  console.log({ data, error });
+  return Response.json({ message: "testing.." });
 }

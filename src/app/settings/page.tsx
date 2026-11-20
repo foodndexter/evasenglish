@@ -15,7 +15,15 @@ const SettingsPage = () => {
   return (
     <div>
       <div className="flex gap-2">
-        <button>{biz.name}</button>
+        <button
+          onClick={async () => {
+            const res = await fetch("/api/juso", { method: "PATCH" });
+            const data = await res.json();
+            console.log(data);
+          }}
+        >
+          {biz.name}
+        </button>
         <button>{biz.ceo}</button>
         <p>{new Date(biz.createdAt).toLocaleDateString()}</p>
       </div>
