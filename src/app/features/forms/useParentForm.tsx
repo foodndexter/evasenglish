@@ -6,7 +6,7 @@ import {
   useSelect,
   useTextInput,
 } from "@/app/components";
-import { useParentStore } from "@/app/zustand/useParentStore";
+// import { useParentStore } from "@/app/zustand/useParentStore";
 import { a, c } from "@/fn";
 import { Parent, ParentPayload, parentRelationships } from "@/types";
 import { prettifyMobile } from "@/utils";
@@ -39,7 +39,8 @@ const Component = ({
   name,
 }: Props) => {
   const { Form, SubmitArea, handler, isPending } = useForm();
-  const { parents, create } = useParentStore();
+  // const { parents, create } = useParentStore();
+  const parents: Parent[] = [];
 
   const onSubmit = useCallback(() => {
     if (isNew || parents.length === 0) {
@@ -62,8 +63,8 @@ const Component = ({
       }
       handler(async () => {
         try {
-          const parent = await create(payload);
-          setSelectedParents((prev) => [parent, ...prev]);
+          // const parent = await create(payload);
+          // setSelectedParents((prev) => [parent, ...prev]);
           R.setValue("");
           N.setValue("");
           M.setValue("");
@@ -79,7 +80,7 @@ const Component = ({
       // const found = parents.find( p => p.id === )
       console.log(parents);
     }
-  }, [isNew, N, R, M, handler, parents, create, setIsNew, setSelectedParents]);
+  }, [isNew, N, R, M, handler, parents, setIsNew, setSelectedParents]);
   return (
     <Form onSubmit={onSubmit}>
       {!isNew && parents.length > 0 ? (

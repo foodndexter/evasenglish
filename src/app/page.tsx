@@ -1,31 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useToggle } from "./components";
+import { useCallback, useState } from "react";
+import { useSelect, useToggle } from "./components";
 import { StudentForm } from "./features";
-import {
-  Filter,
-  filters,
-  useFilterStore,
-  useLessonStore,
-  useMemoStore,
-  useParentStore,
-  useSchoolStore,
-  useStudentStore,
-} from "./zustand";
 import { IoAdd, IoFilterOutline } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
-import { Lesson, Memo, Parent, Payment, School, Student } from "@/types";
-import StudentLi from "./StudentLi";
+import { useAuthStore } from "@/zustand";
+import { redirect } from "next/navigation";
+import Link from "next/link";
 
 const HomePage = () => {
+  const { user, initialized } = useAuthStore();
+
   const M = useToggle();
-  const { students, rawStudents } = useStudentStore();
-  const [data, setData] = useState(students);
-  const lessons = useLessonStore((l) => l.lessons);
-  const schools = useSchoolStore((s) => s.schools);
-  const parents = useParentStore((p) => p.parents);
-  const memos = useMemoStore((m) => m.memos);
+  const [data, setData] = useState([]);
 
   const [isIcon, setIsIcon] = useState(false);
   const [numOfRow, setNumOfRow] = useState(1);
@@ -34,264 +22,31 @@ const HomePage = () => {
     [],
   );
   const F = useToggle();
-  const { filter, filterHandler } = useFilterStore();
-
-  useEffect(() => {
-    console.log(filter);
-    const fn = () => {
-      if (students.length > 0) {
-        console.log(students);
-      }
-      const array: Student[] = [];
-      rawStudents.map((student) => {
-        const ps: Parent[] = [];
-        const ss: School[] = [];
-        const ls: Lesson[] = [];
-        const pms: Payment[] = [];
-        const ms: Memo[] = [];
-        student.lessons.map((id) => {
-          const lesson = lessons.find((lesson) => lesson.id === id);
-          if (lesson) ls.push(lesson);
-        });
-        student.schools.map(({ id, description }) => {
-          const school = schools.find((school) => school.id === id);
-          if (school) ss.push({ ...school, description });
-        });
-        student.parents.map((id) => {
-          const parent = parents.find((parent) => parent.id === id);
-          if (parent) ps.push(parent);
-        });
-        student.memos.map((id) => {
-          const memo = memos.find((memo) => memo.id === id);
-          if (memo) ms.push(memo);
-        });
-        array.push({
-          ...student,
-          parents: ps,
-          lessons: ls,
-          schools: ss,
-          memos: ms,
-          payments: pms,
-        });
-      });
-      let copy = [...array];
-      array.map((student) => {
-        const remove = () => {
-          return (copy = copy.filter(({ id }) => student.id !== id));
-        };
-        if (filter.target === "클래스") {
-          if (!student.lessons.some((lesson) => lesson.id === filter.value))
-            remove();
-        } else if (filter.target === "학교") {
-          if (!student.schools.some((school) => school.id === filter.value))
-            remove();
-        } else if (filter.target === "부서") {
-          const found = student.lessons.find(
-            (lesson) => lesson.sort === filter.value,
-          );
-
-          if (!found) {
-            console.log("remove", student.name);
-            remove();
-          }
-        }
-      });
-      console.log(copy);
-
-      // console.log(
-      //   array.sort((a, b) => {
-      //     switch (filter.target) {
-      //       case "결제일":
-      //         const isAsec =
-      //           typeof filter.value === "string" && filter.value === "asec";
-
-      //         if (a.paymentDate > b.paymentDate) return isAsec ? -1 : 1;
-
-      //         if (a.paymentDate === b.paymentDate) return 0;
-
-      //         if (a.paymentDate < b.paymentDate) return isAsec ? 1 : -1;
-
-      //       default:
-      //         return 0;
-      //     }
-      //   }),
-      // );
-
-      setData(copy);
-    };
-
-    fn();
-    return () => {
-      fn();
-    };
-  }, [students, lessons, rawStudents, schools, parents, memos, filter]);
-
-  const onClickFilter = useCallback(
-    (target: Filter["target"] | null, value: string | null) => {
-      if (!value || !target) return filterHandler(null, null);
-      if (filter.value === value) {
-        filterHandler(null, null);
-      } else {
-        filterHandler(target, value);
-      }
-      F.handler();
-    },
-    [filterHandler, F, filter],
-  );
 
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
   const onDeleteSelected = useCallback(() => {
     console.log("delete", selectedStudents.join(", "));
   }, [selectedStudents]);
 
+  const U = useSelect();
+  if (!initialized) {
+    return <h1>is loading...</h1>;
+  }
+  if (!user) {
+    return <h1>Not logged in</h1>;
+  }
   return (
     <main>
-      {F.toggled && (
-        <F.Modal>
-          <F.ModalBase className="p-2">
-            <ul className="space-y-2">
-              {filters.map((f, index) => (
-                <li key={index} className="space-y-1">
-                  <p className="font-bold text-xs">{f.target}</p>
-                  <ul className="flex gap-2 flex-wrap">
-                    {f.target === "클래스"
-                      ? lessons.map((lesson) => (
-                          <FilterItem
-                            key={lesson.id}
-                            {...lesson}
-                            onClick={() => onClickFilter(f.target, lesson.id)}
-                            selected={
-                              filter.target === "클래스" &&
-                              lesson.id === filter.value
-                            }
-                          />
-                        ))
-                      : f.target === "학교"
-                        ? schools.map((school) => (
-                            <FilterItem
-                              key={school.id}
-                              {...school}
-                              onClick={() => onClickFilter(f.target, school.id)}
-                              selected={
-                                filter.target === "학교" &&
-                                school.id === filter.value
-                              }
-                            />
-                          ))
-                        : f.items.map((item, i) => (
-                            <FilterItem
-                              key={i}
-                              {...item}
-                              onClick={() =>
-                                onClickFilter(f.target, item.value)
-                              }
-                              selected={
-                                filter.target === f.target &&
-                                item.value === filter.value
-                              }
-                            />
-                          ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </F.ModalBase>
-        </F.Modal>
-      )}
-      <div className="flex items-center  border-b pb-2">
-        <p className="flex-1">학생관리: {data.length}명</p>
-        <div className="flex gap-2">
-          {selectedStudents.length > 0 && (
-            <ul className="flex gap-1 text-xs items-center border">
-              <li>
-                <button
-                  className="p-1 hover:text-red-500"
-                  onClick={onDeleteSelected}
-                >
-                  선택 삭제
-                </button>
-              </li>
-              <li>
-                <button className="p-1" onClick={() => setSelectedStudents([])}>
-                  선택 취소
-                </button>
-              </li>
-            </ul>
-          )}
-          <button
-            className={twMerge(base, filter.value && "w-auto gap-2 px-2")}
-            onClick={F.handler}
-          >
-            <IoFilterOutline />
-            {filter.value && (
-              <p className="text-xs">
-                {filter.target}:{" "}
-                {typeof filter.value === "string" && filter.value === "dscd"
-                  ? "내림차순"
-                  : filter.value === "ascd"
-                    ? "오름차순"
-                    : filter.target === "클래스"
-                      ? lessons.find((lesson) => lesson.id === filter.value)
-                          ?.name
-                      : filter.target === "학교"
-                        ? schools.find((school) => school.id === filter.value)
-                            ?.name
-                        : filter.value}
-              </p>
-            )}
-          </button>
-          {!isIcon && (
-            <button
-              className={twMerge(base, "p-1 gap-0.5 flex-wrap")}
-              onClick={nrHandler}
-            >
-              {Array.from({ length: numOfRow }).map((_, i) => (
-                <span
-                  key={i}
-                  className={twMerge(
-                    "size-full border rounded-xs",
-                    numOfRow > 1 && "max-w-2.5",
-                    numOfRow > 2 && "h-2.5",
-                  )}
-                />
-              ))}
-            </button>
-          )}
-          <button className={twMerge(base)} onClick={M.handler}>
-            <IoAdd />
-          </button>
-        </div>
-      </div>
-      <ul>
-        {data.map((student, index) => {
-          const selected = selectedStudents.some((id) => id === student.id);
-          return (
-            <StudentLi
-              key={student.id}
-              {...student}
-              index={index}
-              isIcon={isIcon}
-              numOfRow={numOfRow}
-              selected={selected}
-              onSelect={() =>
-                setSelectedStudents((prev) =>
-                  selected
-                    ? prev.filter((id) => student.id !== id)
-                    : [...prev, student.id],
-                )
-              }
-            />
-          );
-        })}
-      </ul>
-      <button onClick={M.handler}>open modal</button>
-      {M.toggled && (
-        <M.Modal>
-          <M.ModalBase className="p-2">
-            <StudentForm cancelHandler={M.handler} />
-          </M.ModalBase>
-        </M.Modal>
-      )}
+      <header>
+        {user.biz.length > 0 ? (
+          <U.Component
+            {...U.props}
+            data={user.biz.map(({ id, name }) => ({ title: name, value: id }))}
+          />
+        ) : (
+          <Link href="/settings/biz/create">No biz added yet</Link>
+        )}
+      </header>
     </main>
   );
 };

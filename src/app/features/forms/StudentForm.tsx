@@ -3,14 +3,14 @@
 import { useForm, useSelect, useTextInput } from "@/app/components";
 import { a, c } from "@/fn";
 import { Student, StudentPayload } from "@/types";
-import { getDateInputValue, getSerial, lengthValidator } from "@/utils";
+import { getDateInputValue, lengthValidator } from "@/utils";
 import { useCallback, useState } from "react";
 import useJusoForm from "./JusoForm";
 import useSchoolForm from "./useSchoolForm";
 import useLessonForm from "./useLessonForm";
 import useParentForm from "./useParentForm";
 import useMemoForm from "./MemoForm";
-import { useStudentStore } from "@/app/zustand";
+// import { useStudentStore } from "@/app/zustand";
 
 type Props = {
   payload?: Student;
@@ -113,7 +113,7 @@ const StudentForm = ({ cancelHandler, payload }: Props) => {
         if (payload) {
           console.log("edit function");
         } else {
-          await useStudentStore.getState().createStudent([l]);
+          // await useStudentStore.getState().createStudent([l]);
           if (confirm("계속해서 추가하시겠습니까?")) {
             Name.setValue("");
             Mobile.setValue("");

@@ -5,14 +5,15 @@ import {
   useSelect,
   useTextInput,
 } from "@/app/components";
-import { useSchoolStore } from "@/app/zustand";
+// import { useSchoolStore } from "@/app/zustand";
 import { a, c } from "@/fn";
 import { School } from "@/types";
 import { useCallback, useMemo, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
 
 const useSchoolForm = (payload?: School[]) => {
-  const schools = useSchoolStore((s) => s.schools);
+  // const schools = useSchoolStore((s) => s.schools);
+  const schools: School[] = [];
   const S = useSelect({});
   const SL = useSelect({});
   const L = useTextInput({});

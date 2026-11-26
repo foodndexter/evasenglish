@@ -1,33 +1,48 @@
 "use client";
 
+import { useAuthStore } from "@/zustand";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren, Suspense, useEffect, useState } from "react";
-import { useLessonStore } from "../zustand/useLessonStore";
-import { useSchoolStore } from "../zustand/useSchoolStore";
-import { useMemoStore, useParentStore, useStudentStore } from "../zustand";
 
 const AppProvider = ({ children }: PropsWithChildren) => {
   const [initialized, setInitialized] = useState(false);
 
+  const { user, handler, init } = useAuthStore();
   useEffect(() => {
-    const init = async () => {
+    const fn = async () => {
       try {
         setInitialized(false);
-        await useLessonStore.getState().init();
-        await useSchoolStore.getState().init();
-        await useParentStore.getState().init();
-        await useMemoStore.getState().init();
-        await useStudentStore.getState().init();
+        const res = await fetch("/api/auth");
+        const data = await res.json();
+
+        if (!res.ok) {
+          return console.warn(data.message);
+        }
+        handler(data.user);
       } finally {
-        setInitialized(true);
-        console.log("initialized!");
+        init();
       }
     };
-    init();
+    fn();
     return () => {
-      init();
+      fn();
     };
-  }, []);
+  }, [handler, init]);
+
+  // useEffect(() =>{
+  //   const fn = async () =>{
+  //     if ( !user )return
+  //     if( user.biz.length === 0 ) return
+
+  //     const res = await fetch(`/api/biz/${}`)
+  //    }
+
+  //   fn()
+  //   return () =>{
+  //     fn()
+  //   }
+  // }, [ user])
+
   return (
     <Suspense fallback={<>Loading...</>}>
       <QueryClientProvider client={new QueryClient()}>

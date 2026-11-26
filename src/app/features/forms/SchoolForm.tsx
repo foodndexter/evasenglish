@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm, useSelect, useTextInput } from "@/app/components";
-import { useSchoolStore } from "@/app/zustand";
+// import { useSchoolStore } from "@/app/zustand";
 import { a, c } from "@/fn";
 import { School, SchoolPayload, schoolSorts } from "@/types";
 import { lengthValidator } from "@/utils";
@@ -37,10 +37,10 @@ const SchoolForm = ({ isAdmin, payload, cancelHandler }: Props) => {
 
     handler(async () => {
       if (payload) {
-        await useSchoolStore.getState().put({ ...payload, ...p });
+        // await useSchoolStore.getState().put({ ...payload, ...p });
         if (cancelHandler) cancelHandler();
       } else {
-        await useSchoolStore.getState().create(p);
+        // await useSchoolStore.getState().create(p);
         c(
           "추가되었습니다. 계속해서 새로운 학교를 등록하시겠습니까?",
           () => {

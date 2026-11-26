@@ -9,9 +9,8 @@ export async function POST(req: Request) {
   };
   const url =
     process.env.JUSO_URL! +
-    `&keyword=${encodeURIComponent(keyword)}&currentPage=${currentPage ?? 1}&countPerPage=${countPerPage ?? 20}`;
+    `&keyword=${keyword}&currentPage=${currentPage ?? 1}&countPerPage=${countPerPage ?? 20}&resultType=json`;
 
-  console.log(url);
   const res = await fetch(url);
   const { results } = (await res.json()) as JusoResult;
   if (

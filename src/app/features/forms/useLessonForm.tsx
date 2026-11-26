@@ -1,7 +1,7 @@
 "use client";
 
 import { SelectInput, SetFn, useForm, useSelect } from "@/app/components";
-import { useLessonStore } from "@/app/zustand";
+// import { useLessonStore } from "@/app/zustand";
 import { Lesson } from "@/types";
 import { useMemo, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
@@ -13,7 +13,8 @@ type Props = {
 };
 
 const Component = ({ L, selectedLessons, setSelectedLessons }: Props) => {
-  const lessons = useLessonStore((l) => l.lessons);
+  // const lessons = useLessonStore((l) => l.lessons);
+  const lessons: Lesson[] = [];
   const { Form } = useForm();
   return (
     <Form>

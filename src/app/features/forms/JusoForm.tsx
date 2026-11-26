@@ -1,6 +1,6 @@
 "use client";
 
-import { TextInput, useForm, useTextInput } from "@/app/components";
+import { Button, TextInput, useForm, useTextInput } from "@/app/components";
 import { a } from "@/fn";
 import {
   filterJuso,
@@ -30,7 +30,13 @@ type Props = {
   Keyword: TextInput;
   Rest: TextInput;
 };
-const Component = ({ Keyword, juso, setJuso, Rest }: Props) => {
+const Component = ({
+  Keyword,
+  juso,
+  setJuso,
+  Rest,
+  cancelHandler,
+}: Props & { cancelHandler?: () => void }) => {
   const { Form, isPending, handler } = useForm();
   const [hasSearched, setHasSearched] = useState(false);
   const [data, setData] = useState<JusoResultProps[][]>([]);
@@ -117,29 +123,41 @@ const Component = ({ Keyword, juso, setJuso, Rest }: Props) => {
     <Form className="border" onSubmit={juso ? onSubmit : onSearch}>
       {juso ? (
         hasSaved ? (
-          <div className="flex gap-2 items-end">
-            <Rest.Component
-              {...Rest.props}
-              value={juso.roadAddr + ", " + juso.rest}
-              // resetHidden
-              containerClassName="flex-1"
-              label={{ children: "주소" }}
-              className="text-sm"
-              ResetIcon={AiOutlineEdit}
-              resetClassName="text-xs rounded-full bg-zinc-400 hover:bg-zinc-500 dark:bg-zinc-600 text-white p-0.5 hover:text-white"
-              onReset={() => {
-                setHasSaved(false);
-                Rest.setValue(juso.rest);
-                Rest.focus();
-              }}
-            />
+          <div className="space-y-2">
+            <div className="flex gap-2 items-end">
+              <Rest.Component
+                {...Rest.props}
+                value={juso.roadAddr + ", " + juso.rest}
+                // resetHidden
+                containerClassName="flex-1"
+                label={{ children: "주소" }}
+                className="text-sm"
+                ResetIcon={AiOutlineEdit}
+                resetClassName="text-xs rounded-full bg-zinc-400 hover:bg-zinc-500 dark:bg-zinc-600 text-white p-0.5 hover:text-white"
+                onReset={() => {
+                  setHasSaved(false);
+                  Rest.setValue(juso.rest);
+                  Rest.focus();
+                }}
+              />
 
-            <button
-              type="button"
-              className="size-10 rounded bg-primary items-center text-white justify-center"
-            >
-              <IoSearch />
-            </button>
+              <button
+                type="button"
+                className="size-10 rounded bg-primary items-center text-white justify-center"
+              >
+                <IoSearch />
+              </button>
+            </div>
+            {cancelHandler && (
+              <div className="flex gap-2 justify-end">
+                <Button isPrimary className="px-2" onClick={cancelHandler}>
+                  done
+                </Button>
+                {/* <Button isTouchable className="px-2">
+                Cancel
+              </Button> */}
+              </div>
+            )}
           </div>
         ) : (
           <>

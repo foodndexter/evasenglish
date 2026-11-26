@@ -6,3 +6,4 @@ export * from "./payment.type";
 export * from "./student.type";
 export * from "./biz.type";
 export * from "./juso.types";
+export * from "./user.type";

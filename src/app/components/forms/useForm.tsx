@@ -30,11 +30,29 @@ export default function useForm() {
     ),
     [],
   );
+
+  const SubmitButton = useCallback(
+    (props: ComponentProps<"button">) => (
+      <button
+        {...props}
+        type="submit"
+        className={twMerge(
+          "flex-1 rounded bg-primary text-white items-center justify-center gap-2 disabled:bg-primary/80",
+          props?.className,
+        )}
+      >
+        {props?.disabled && <CgSpinner className="animate-spin" />}
+
+        {props?.children ?? "완료"}
+      </button>
+    ),
+    [],
+  );
+
   const SubmitArea = useCallback(
     ({
       container,
       cancel,
-      submit,
       onSubmit,
       onCancel,
       cancelChildren,
@@ -71,26 +89,16 @@ export default function useForm() {
             </>
           )}
         </button>
-        <button
-          disabled={isPending}
-          type="submit"
-          className={twMerge(
-            "flex-1 rounded bg-primary text-white items-center justify-center gap-2 disabled:bg-primary/80",
-            submitClassName,
-          )}
+        <SubmitButton
+          className={submitClassName}
+          children={submitChildren}
           onClick={onSubmit}
-        >
-          {submitChildren ?? (
-            <>
-              {isPending && <CgSpinner className="animate-spin" />}{" "}
-              {submit ?? "완료"}
-            </>
-          )}
-        </button>
+          disabled={isPending}
+        />
       </div>
     ),
-    [],
+    [SubmitButton],
   );
 
-  return { isPending, handler, ref, Form, SubmitArea };
+  return { isPending, handler, ref, Form, SubmitArea, SubmitButton };
 }
