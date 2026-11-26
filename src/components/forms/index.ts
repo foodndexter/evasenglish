@@ -3,3 +3,4 @@ export { default as useForm } from "./useForm";
 export * from "./useTextInput";
 export * from "./useSelect";
 export { default as Button } from "./Button";
+export { default as useTextForm } from "./useTextForm";

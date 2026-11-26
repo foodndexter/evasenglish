@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useId, useState } from "react";
+import { ReactNode, useCallback, useEffect, useId, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { twMerge } from "tailwind-merge";
+import Button from "./Button";
 
 export default function useToggle() {
   const [toggled, setToggled] = useState(false);
@@ -68,6 +69,27 @@ export default function useToggle() {
     [toggled],
   );
   const id = useId();
+  const Trigger = useCallback(
+    ({ title, button }: { title?: string; button?: ReactNode }) => {
+      return (
+        <div className="space-y-1">
+          {title && (
+            <label htmlFor={id} className="text-xs text-zinc-500">
+              {title}
+            </label>
+          )}
+          <Button
+            isTouchable
+            onClick={() => setToggled(true)}
+            className="border w-full"
+          >
+            {button}
+          </Button>
+        </div>
+      );
+    },
+    [id],
+  );
   const Switch = useCallback(
     ({ label, text, handler, state }: SwitchProps) => {
       return (
@@ -100,7 +122,7 @@ export default function useToggle() {
     },
     [id],
   );
-  return { toggled, setToggled, handler, Modal, ModalBase, Switch };
+  return { toggled, setToggled, handler, Modal, ModalBase, Switch, Trigger };
 }
 
 export type SwitchProps = {

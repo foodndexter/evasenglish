@@ -4,7 +4,7 @@ import {
   useForm,
   useSelect,
   useTextInput,
-} from "@/app/components";
+} from "@/components";
 // import { useSchoolStore } from "@/app/zustand";
 import { a, c } from "@/fn";
 import { School } from "@/types";

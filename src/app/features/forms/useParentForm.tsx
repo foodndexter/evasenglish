@@ -5,7 +5,7 @@ import {
   useForm,
   useSelect,
   useTextInput,
-} from "@/app/components";
+} from "@/components";
 // import { useParentStore } from "@/app/zustand/useParentStore";
 import { a, c } from "@/fn";
 import { Parent, ParentPayload, parentRelationships } from "@/types";

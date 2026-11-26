@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useLessonStore, useSchoolStore } from "../zustand";
-import { useToggle } from "../components";
+import { useToggle } from "../../components";
 import { LessonForm, SchoolForm } from "../features";
 import {
   IoAddCircleOutline,
@@ -19,8 +18,8 @@ type Item = {
 };
 
 const ListPage = () => {
-  const lessons = useLessonStore((l) => l.lessons);
-  const schools = useSchoolStore((l) => l.schools);
+  const lessons = [];
+  const schools = [];
   const L = useToggle();
   const S = useToggle();
   const [lSelection, setLSelection] = useState(lessons.map(() => false));

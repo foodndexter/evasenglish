@@ -8,7 +8,7 @@ import {
   IoPersonCircleOutline,
   IoSearchOutline,
 } from "react-icons/io5";
-import { Button, useForm, useTextInput, useToggle } from "../components";
+import { Button, useForm, useTextInput, useToggle } from "../../components";
 import { useCallback } from "react";
 import { loginAction, signupAction } from "./auth.action";
 import { a, c } from "@/fn";
@@ -48,8 +48,11 @@ const AuthForm = () => {
     handler(async () => {
       try {
         const { accessToken, user } = await loginAction(email, password);
+        console.log(user);
         useAuthStore.getState().handler(user);
+        console.log("user init");
         router.push("/");
+        console.log("redirect");
       } catch (error) {
         if (error instanceof Error) {
           switch (error.message) {

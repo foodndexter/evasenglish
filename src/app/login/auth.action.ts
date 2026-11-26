@@ -49,16 +49,15 @@ export async function loginAction(email: string, password: string) {
     user_id: data.id,
   };
 
-  const token = await tokenDB
-    .upsert(tokenPayload, { onConflict: "user_id, device_id" })
-    .select("*")
-    .single();
+  const token = await tokenDB.upsert(tokenPayload).select("*").single();
 
   if (token.error) {
     throw new Error(token.error.message);
   }
-
-  return { user: { ...data, password: null }, accessToken };
+  cookieStore.set("accessToken", accessToken);
+  cookieStore.set("deviceId", device_id);
+  const user = { ...data, password: null };
+  return { user, accessToken };
 }
 
 export async function signupAction(props: UserPayload) {

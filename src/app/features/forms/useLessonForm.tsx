@@ -1,6 +1,6 @@
 "use client";
 
-import { SelectInput, SetFn, useForm, useSelect } from "@/app/components";
+import { SelectInput, SetFn, useForm, useSelect } from "@/components";
 // import { useLessonStore } from "@/app/zustand";
 import { Lesson } from "@/types";
 import { useMemo, useState } from "react";

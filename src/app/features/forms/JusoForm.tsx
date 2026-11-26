@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, TextInput, useForm, useTextInput } from "@/app/components";
+import { Button, TextInput, useForm, useTextInput } from "@/components";
 import { a } from "@/fn";
 import {
   filterJuso,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm, useSelect, useTextInput } from "@/app/components";
+import { useForm, useSelect, useTextInput } from "@/components";
 // import { useSchoolStore } from "@/app/zustand";
 import { a, c } from "@/fn";
 import { School, SchoolPayload, schoolSorts } from "@/types";

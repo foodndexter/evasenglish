@@ -1,5 +1,5 @@
 import { Student } from "@/types";
-import { useToggle } from "./components";
+import { useToggle } from "../components";
 import {
   LessonForm,
   StudentForm,

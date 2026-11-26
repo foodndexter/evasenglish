@@ -44,7 +44,10 @@ const Component = ({
         <label
           htmlFor={props?.id}
           {...label}
-          className={twMerge("text-zinc-500 text-xs", label?.className)}
+          className={twMerge(
+            "text-zinc-500 text-xs flex gap-1 items-center",
+            label?.className,
+          )}
         />
       )}
       <div className={twMerge("relative", warpperClassName)}>

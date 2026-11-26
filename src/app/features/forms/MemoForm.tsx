@@ -4,7 +4,7 @@ import {
   useForm,
   useTextInput,
   useToggle,
-} from "@/app/components";
+} from "@/components";
 import { a } from "@/fn";
 import { Memo, MemoPayload } from "@/types";
 import { useCallback, useMemo, useState } from "react";

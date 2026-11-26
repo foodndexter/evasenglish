@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm, useSelect, useTextInput } from "@/app/components";
+import { useForm, useSelect, useTextInput } from "@/components";
 import { a, c } from "@/fn";
 import { Student, StudentPayload } from "@/types";
 import { getDateInputValue, lengthValidator } from "@/utils";
